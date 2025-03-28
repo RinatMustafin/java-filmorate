@@ -15,7 +15,7 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
     private Map<Long, Film> idToFilm = new HashMap<>();
-    private Long idCounter = 1l;
+    private Long idCounter = 1L;
 
     @GetMapping
     public List<Film> getAll() {

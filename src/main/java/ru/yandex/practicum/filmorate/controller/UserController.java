@@ -16,7 +16,7 @@ import java.util.*;
 public class UserController {
 
     private Map<Long, User> idToUser = new HashMap<>();
-    private Long idCounter = 1l;
+    private Long idCounter = 1L;
 
     @GetMapping
     public List<User> getAll() {
