@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.exception.InvalidReleaseDateException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.ApiError;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
