@@ -1,60 +1,74 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.InvalidReleaseDateException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
-    private Map<Long, Film> idToFilm = new HashMap<>();
-    private Long idCounter = 1L;
+
+    private final FilmService filmService;
 
     @GetMapping
     public List<Film> getAll() {
         log.info("Получен HTTP-запрос на получение всех фильмов");
-        return new ArrayList<>(idToFilm.values());
+        List<Film> films = filmService.getAll();
+        return films;
     }
 
     @PostMapping
     public Film create(@RequestBody @Valid Film film) {
         log.info("Получен HTTP-запрос на добавление фильма: {}", film);
-        validateDate(film);
-        film.setId(idCounter++);
-        idToFilm.put(film.getId(), film);
+        Film createdFilm = filmService.create(film);
         log.info("Успешно обработан HTTP-запрос на добавление фильма: {}", film);
-        return film;
+        return createdFilm;
     }
 
 
-    private void validateDate(Film film) {
-        LocalDate neededDate = LocalDate.of(1895, 12, 28);
-        if (film.getReleaseDate().isBefore(neededDate)) {
-            String errorMessage = "Дата релиза не валидна";
-            log.error(errorMessage);
-            throw new InvalidReleaseDateException(errorMessage);
-        }
+    @GetMapping("/{id}")
+    public Film getById(@PathVariable Long id) {
+        log.info("Получен HTTP-запрос на получение фильма по id: {}", id);
+        Film filmById = filmService.getById(id);
+        return filmById;
     }
 
 
     @PutMapping
     public Film update(@RequestBody Film film) {
         log.info("Получен HTTP-запрос на обновление фильма: {}", film);
-        Long id = film.getId();
-        if (!idToFilm.containsKey(id)) {
-            String errorMessage = String.format("Фильм с id %d не найден", id);
-            log.error(errorMessage);
-            throw new FilmNotFoundException(errorMessage);
-        }
-        idToFilm.put(film.getId(), film);
+        Film updateFilm = filmService.update(film);
         log.info("Успешно обработан HTTP-запрос на обновление фильма: {}", film);
-        return film;
+        return updateFilm;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        filmService.deleteById(id);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public void putLike(@PathVariable Long id, @PathVariable Long userId) {
+        log.info("Получен HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userId);
+        filmService.putLike(id, userId);
+        log.info("Успешно обработан HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable Long id, @PathVariable Long userId) {
+        filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getTopFilms(
+            @RequestParam(defaultValue = "10") int count) {
+        return filmService.getTopPopularFilms(count);
     }
 }

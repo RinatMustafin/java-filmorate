@@ -5,12 +5,15 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Film.
  */
-@FieldDefaults (level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,4 +26,14 @@ public class Film {
     LocalDate releaseDate;
     @Positive
     int duration;
+    @Getter
+    final Set<Long> likes = new HashSet<>();
+
+    public void addLike(Long userId) {
+        likes.add(userId);
+    }
+
+    public void removeLike(Long userId) {
+        likes.remove(userId);
+    }
 }
