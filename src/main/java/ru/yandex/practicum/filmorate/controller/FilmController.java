@@ -54,16 +54,16 @@ public class FilmController {
         filmService.deleteById(id);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void putLike(@PathVariable Long id, @PathVariable Long userId) {
-        log.info("Получен HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userId);
-        filmService.putLike(id, userId);
-        log.info("Успешно обработан HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userId);
+    @PutMapping("/{id}/like/{userid}")
+    public void putLike(@PathVariable Long id, @PathVariable Long userid) {
+        log.info("Получен HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userid);
+        filmService.putLike(id, userid);
+        log.info("Успешно обработан HTTP-запрос на лайк фильма: {} от пользователя: {}", id, userid);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
-    public void removeLike(@PathVariable Long id, @PathVariable Long userId) {
-        filmService.removeLike(id, userId);
+    @DeleteMapping("/{id}/like/{userid}")
+    public void removeLike(@PathVariable Long id, @PathVariable Long userid) {
+        filmService.removeLike(id, userid);
     }
 
     @GetMapping("/popular")
