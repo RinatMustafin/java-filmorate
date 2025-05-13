@@ -7,12 +7,15 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Film.
  */
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @AllArgsConstructor
@@ -28,6 +31,8 @@ public class Film {
     int duration;
     @Getter
     final Set<Long> likes = new HashSet<>();
+    Mpa mpa;
+    List<Genre> genres = new ArrayList<>();
 
     public void addLike(Long userId) {
         likes.add(userId);
