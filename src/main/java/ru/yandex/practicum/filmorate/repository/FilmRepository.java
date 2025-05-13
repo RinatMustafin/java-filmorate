@@ -85,7 +85,6 @@ public class FilmRepository implements FilmStorage {
         if (updated == 0) {
             throw new FilmNotFoundException("Фильм с id " + film.getId() + " не найден для обновления");
         }
-
         return film;
     }
 
