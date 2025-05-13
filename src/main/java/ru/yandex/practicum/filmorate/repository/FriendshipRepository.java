@@ -15,13 +15,13 @@ public class FriendshipRepository {
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
 
-    String ADD_FRIEND_QUERY = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
-    String DELETE_FRIEND_QUERY = "DELETE FROM friendship WHERE user_id = ? and friend_id = ?";
-    String GET_FRIEND_QUERY = "SELECT * FROM users u" +
+    private static final String ADD_FRIEND_QUERY = "INSERT INTO friendship (user_id, friend_id) VALUES (?, ?)";
+    private static final String DELETE_FRIEND_QUERY = "DELETE FROM friendship WHERE user_id = ? and friend_id = ?";
+    private static final String GET_FRIEND_QUERY = "SELECT * FROM users u" +
             " JOIN friendship f ON  u.id = f.friend_id " +
             " WHERE f.user_id = ?";
 
-    String GET_COMMON_FRIEND_QUERY = "SELECT u.* FROM users u " +
+    private static final String GET_COMMON_FRIEND_QUERY = "SELECT u.* FROM users u " +
             "JOIN friendship f1 ON u.id = f1.friend_id " +
             "JOIN friendship f2 ON u.id = f2.friend_id " +
             "WHERE f1.user_id = ? AND f2.user_id = ?";

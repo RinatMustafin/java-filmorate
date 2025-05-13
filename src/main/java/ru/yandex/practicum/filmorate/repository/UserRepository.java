@@ -23,11 +23,11 @@ import java.util.List;
 public class UserRepository implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
-    String GET_QUERY = "SELECT * FROM users";
-    String CREATE_QUERY = "INSERT INTO users (name, login, email, birthday) VALUES (?, ?, ?, ?)";
-    String GET_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-    String UPDATE_QUERY = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? WHERE id = ?";
-    String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
+    private static final String GET_QUERY = "SELECT * FROM users";
+    private static final String CREATE_QUERY = "INSERT INTO users (name, login, email, birthday) VALUES (?, ?, ?, ?)";
+    private static final String GET_ID_QUERY = "SELECT * FROM users WHERE id = ?";
+    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? WHERE id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
 
     @Override
     public List<User> getAll() {

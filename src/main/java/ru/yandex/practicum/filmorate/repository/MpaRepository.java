@@ -16,8 +16,8 @@ public class MpaRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final MpaMapper mpaMapper;
-    private String GET_BY_ID_QUERY = "SELECT * FROM mpa WHERE mpa_id = ?";
-    private String GET_ALL_QUERY = "SELECT * FROM mpa ORDER BY mpa_id";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM mpa WHERE mpa_id = ?";
+    private static final String GET_ALL_QUERY = "SELECT * FROM mpa ORDER BY mpa_id";
 
     public Mpa getById(int id) {
         try {
