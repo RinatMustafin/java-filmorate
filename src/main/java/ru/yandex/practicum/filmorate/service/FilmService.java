@@ -63,7 +63,7 @@ public class FilmService {
         if (film.getGenres() != null) {
             for (Genre genre : film.getGenres()) {
                 Genre existing = genreRepository.findById(genre.getId())
-                        .orElseThrow(() -> new GenreNotFoundException("Жанр с id " + genre.getId() + " не найден"));
+                        .orElseThrow(() -> new GenreNotFoundException(String.format("Жанр с id %d не найден", genre.getId())));
                 validatedGenres.add(existing);
             }
         }
@@ -84,7 +84,7 @@ public class FilmService {
         if (film.getGenres() != null) {
             for (Genre genre : film.getGenres()) {
                 Genre existing = genreRepository.findById(genre.getId())
-                        .orElseThrow(() -> new GenreNotFoundException("Жанр с id " + genre.getId() + " не найден"));
+                        .orElseThrow(() -> new GenreNotFoundException(String.format("Жанр с id %d не найден", genre.getId())));
                 validatedGenres.add(existing);
             }
         }
@@ -101,10 +101,10 @@ public class FilmService {
         Film filmById = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
         if (filmById == null) {
-            throw new FilmNotFoundException("Фильм не найден: " + filmId);
+            throw new FilmNotFoundException(String.format("Фильм не найден: %d ", filmId));
         }
         if (user == null) {
-            throw new UserNotFoundException("Пользователь не найден: " + userId);
+            throw new UserNotFoundException(String.format("Пользователь не найден: %d", userId));
         }
         likeRepository.addLike(filmId, userId);
     }
@@ -113,10 +113,10 @@ public class FilmService {
         Film filmById = filmStorage.getById(filmId);
         User user = userStorage.getById(userId);
         if (filmById == null) {
-            throw new FilmNotFoundException("Фильм не найден: " + filmId);
+            throw new FilmNotFoundException(String.format("Фильм не найден: %d ", filmId));
         }
         if (user == null) {
-            throw new UserNotFoundException("Пользователь не найден: " + userId);
+            throw new UserNotFoundException(String.format("Пользователь не найден: %d", userId));
         }
         likeRepository.removeLike(filmId, userId);
     }
@@ -147,7 +147,7 @@ public class FilmService {
 
     public Genre getGenreById(int id) {
         return genreRepository.findById(id)
-                .orElseThrow(() -> new GenreNotFoundException("Жанр с id " + id + " не найден"));
+                .orElseThrow(() -> new GenreNotFoundException((String.format("Жанр с id %d не найден", id))));
     }
 
     private void validateDate(Film film) {

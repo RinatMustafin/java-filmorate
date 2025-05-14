@@ -81,7 +81,7 @@ public class UserService {
         User other = userStorage.getById(otherId);
 
         if (userId.equals(otherId)) {
-            throw new IllegalArgumentException("Один и тот же человек");
+            throw new IllegalArgumentException("Нельзя искать общих друзей у самого себя.");
         }
 
 
