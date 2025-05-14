@@ -2,35 +2,37 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.InvalidBirthdayException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.repository.FriendshipRepository;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+    //private JdbcTemplate jdbcTemplate;
+    @Qualifier("userRepository")
     private final UserStorage userStorage;
+    private final FriendshipRepository friendshipRepository;
 
     public List<User> getAll() {
-        List<User> allUsers = userStorage.getAll();
-        return allUsers;
+        return userStorage.getAll();
     }
 
     public User getById(Long id) {
-        User user = userStorage.getById(id);
-        return user;
+        return userStorage.getById(id);
     }
 
     public User create(User user) {
-        User createdUser = userStorage.create(user);
-        return createdUser;
+        validateDate(user);
+
+        return userStorage.create(user);
     }
 
     public User update(User user) {
@@ -43,18 +45,16 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        User user = userStorage.getById(userId);
+        User user = userStorage.getById(userId); // репозиторий
         User friend = userStorage.getById(friendId);
 
-        if (userId.equals(friendId)) {
+        if (user.getId().equals(friend.getId())) {
             throw new IllegalArgumentException("Нельзя добавиться к самому себе");
         }
 
         user.addFriend(friendId);
-        friend.addFriend(userId);
 
-        userStorage.update(user);
-        userStorage.update(friend);
+        friendshipRepository.addFriend(userId, friendId);
     }
 
     public void deleteFriend(Long userId, Long friendId) {
@@ -64,23 +64,36 @@ public class UserService {
         user.removeFriend(friendId);
         friend.removeFriend(userId);
 
-        userStorage.update(user);
-        userStorage.update(friend);
+        friendshipRepository.deleteFriend(userId, friendId);
+//       friendshipRepository.deleteFriend(friendId, userId);
     }
 
     public List<User> getFriends(Long userId) {
+
         User user = userStorage.getById(userId);
-        return user.getFriendIds().stream()
-                .map(id -> userStorage.getById(id))
-                .collect(Collectors.toList());
+
+        return friendshipRepository.getFriends(user.getId());
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
-        Set<Long> userFriendIds = userStorage.getById(userId).getFriendIds();
-        Set<Long> otherFriendIds = userStorage.getById(otherId).getFriendIds();
-        return userFriendIds.stream()
-                .filter(id -> otherFriendIds.contains(id))
-                .map(id -> userStorage.getById(id))
-                .collect(Collectors.toList());
+
+        User user = userStorage.getById(userId); // репозиторий
+        User other = userStorage.getById(otherId);
+
+        if (userId.equals(otherId)) {
+            throw new IllegalArgumentException("Нельзя искать общих друзей у самого себя.");
+        }
+
+
+        return friendshipRepository.getCommonFriends(user.getId(), other.getId());
+    }
+
+    private void validateDate(User user) {
+        LocalDate currentDate = LocalDate.now();
+        if (user.getBirthday().isAfter(currentDate)) {
+            String errorMessage = "Дата позже текущей";
+            log.error(errorMessage);
+            throw new InvalidBirthdayException(errorMessage);
+        }
     }
 }

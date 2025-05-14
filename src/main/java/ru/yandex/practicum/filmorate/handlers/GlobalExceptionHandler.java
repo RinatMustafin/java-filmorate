@@ -5,10 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.InvalidBirthdayException;
-import ru.yandex.practicum.filmorate.exception.InvalidReleaseDateException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.ApiError;
 
 import java.util.stream.Collectors;
@@ -56,5 +53,20 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handleUncaught(Exception e) {
         return ApiError.builder().errorCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).description(e.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleMpaNotFoundException(MpaNotFoundException e) {
+        return ApiError.builder().errorCode(HttpStatus.NOT_FOUND.value()).description(e.getMessage()).build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError handleGenreNotFoundException(GenreNotFoundException e) {
+        return ApiError.builder()
+                .errorCode(HttpStatus.NOT_FOUND.value())
+                .description(e.getMessage())
+                .build();
     }
 }

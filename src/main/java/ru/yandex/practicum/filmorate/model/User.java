@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor

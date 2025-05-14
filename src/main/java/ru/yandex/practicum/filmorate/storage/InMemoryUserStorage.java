@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.InvalidBirthdayException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -11,6 +12,7 @@ import java.util.*;
 
 @Service
 @Slf4j
+@Qualifier("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
 
     private Map<Long, User> idToUser = new HashMap<>();
